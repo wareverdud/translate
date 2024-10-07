@@ -6,8 +6,16 @@ import './App.css'
 export const App = () => {
   const [value, setValue] = useState('')
   const [initLanguage, setInitLanguage] = useState('en')
-  const [translation, setTranslation] = useState('')
-  const [targetLanguage, setTargetLanguage] = useState('it')
+  const [targetLanguages, setTargetLanguages] = useState<string[]>(['it', 'es'])
+  const [translations, setTranslations] = useState<{ [key: string]: string }>(
+    targetLanguages.reduce(
+      (acc: { [key: string]: string }, language: string) => {
+        acc[language] = ''
+        return acc
+      },
+      {},
+    ),
+  )
   const [loading, setLoading] = useState(false)
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
     null,
@@ -29,14 +37,28 @@ export const App = () => {
     const newTimeout = setTimeout(async () => {
       if (value.trim()) {
         setLoading(true)
-        const translatedText = await handleTranslate(value, {
-          from: initLanguage,
-          to: targetLanguage,
-        })
-        setTranslation(translatedText)
+        const newTranslations: { [key: string]: string } = {}
+
+        for (const lang of targetLanguages) {
+          const translatedText = await handleTranslate(value, {
+            from: initLanguage,
+            to: lang,
+          })
+          newTranslations[lang] = translatedText
+        }
+
+        setTranslations(newTranslations)
         setLoading(false)
       } else {
-        setTranslation('')
+        setTranslations(
+          targetLanguages.reduce(
+            (acc: { [key: string]: string }, language: string) => {
+              acc[language] = ''
+              return acc
+            },
+            {},
+          ),
+        )
       }
     }, 500)
 
@@ -44,7 +66,14 @@ export const App = () => {
 
     return () => clearTimeout(newTimeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, initLanguage, targetLanguage])
+  }, [value, initLanguage, targetLanguages])
+
+  const handleAddLanguage = (newLang: string) => {
+    if (!targetLanguages.includes(newLang)) {
+      setTargetLanguages((prev) => [...prev, newLang])
+      setTranslations((prev) => ({ ...prev, [newLang]: '' }))
+    }
+  }
 
   return (
     <div className="container">
@@ -62,35 +91,32 @@ export const App = () => {
         <textarea
           placeholder="Enter your text"
           value={value}
-          onChange={(e) => {
-            if (
-              e.target.value.trim() !== ' ' ||
-              e.target.value.trim() !== '\n'
-            ) {
-              setValue(e.target.value)
-            }
-          }}
+          onChange={(e) => setValue(e.target.value)}
         />
       </div>
-      <div className="language-block">
-        <select
-          onChange={(e) => setTargetLanguage(e.target.value)}
-          value={targetLanguage}
-        >
-          {languages.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.label}
-            </option>
-          ))}
-        </select>
-        <div>
-          {loading ? (
-            <div className="spinner"></div>
-          ) : (
-            <textarea value={translation} readOnly />
-          )}
+      {Object.entries(translations).map(([lang, translatedText]) => (
+        <div className="language-block" key={lang}>
+          <select
+            value={lang}
+            onChange={(e) => handleAddLanguage(e.target.value)}
+          >
+            {languages.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+          <div>
+            {loading ? (
+              <div className="spinner"></div>
+            ) : (
+              <textarea value={translatedText} readOnly />
+            )}
+          </div>
         </div>
-      </div>
+      ))}
+      <button onClick={() => handleAddLanguage('fr')}>Add French</button>
+      <button onClick={() => handleAddLanguage('ru')}>Add Russian</button>
     </div>
   )
 }
