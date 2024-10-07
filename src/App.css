@@ -3,6 +3,26 @@
   margin-left: 20px;
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.source {
+  display: flex;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.header {
+  display: flex;
+  width: 332px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .language-block {
@@ -11,6 +31,13 @@
   gap: 10px;
   min-width: 332px;
   min-height: 243.5px;
+}
+
+.trashIcon {
+  height: 45.5px;
+  background: white;
+  border-radius: 12px;
+  padding: 2px;
 }
 
 textarea {
