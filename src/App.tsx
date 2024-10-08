@@ -71,8 +71,45 @@ export const App = () => {
 
   const handleChange = (value: string[]) => setTargetLanguages(value)
 
+  const handleSpeak = (text: string, lang: string) => {
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = lang
+    window.speechSynthesis.speak(utterance)
+  }
+
   return (
     <>
+      <div className="source">
+        <div className="language-block">
+          <Select
+            style={{
+              color: '#fff',
+              fontFamily:
+                'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+              fontSize: 'large',
+            }}
+            showSearch
+            placeholder="Select a source language"
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={languages.map((item) => ({
+              value: item.id,
+              label: item.label,
+            }))}
+            defaultValue={['en']}
+            onChange={(e) => setInitLanguage(e as unknown as string)}
+          />
+          <textarea
+            placeholder="Enter your text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          <button onClick={() => handleSpeak(value, initLanguage)}>
+            🔊 Speak
+          </button>
+        </div>
+      </div>
       <div className="header">
         <Select
           mode="multiple"
@@ -96,35 +133,6 @@ export const App = () => {
           }))}
         />
       </div>
-      <div className="source">
-        <div className="language-block">
-          <Select
-            style={{
-              color: '#fff',
-              fontFamily:
-                'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
-              fontSize: 'large',
-            }}
-            showSearch
-            placeholder="Select a source language"
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            options={languages.map((item) => ({
-              value: item.id,
-              label: item.label,
-            }))}
-            defaultValue={['en']}
-            onChange={(e) => setInitLanguage(e as unknown as string)}
-          />
-
-          <textarea
-            placeholder="Enter your text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-        </div>
-      </div>
       <div className="container">
         {Object.entries(translations).map(([lang, translatedText]) => (
           <div className="language-block" key={lang}>
@@ -136,6 +144,11 @@ export const App = () => {
                 <textarea value={translatedText} readOnly />
               )}
             </div>
+            {!loading && (
+              <button onClick={() => handleSpeak(translatedText, lang)}>
+                🔊 Speak
+              </button>
+            )}
           </div>
         ))}
       </div>
