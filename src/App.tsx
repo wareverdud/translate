@@ -7,7 +7,7 @@ import './App.css'
 export const App = () => {
   const [value, setValue] = useState('')
   const [initLanguage, setInitLanguage] = useState('en')
-  const [targetLanguages, setTargetLanguages] = useState<string[]>(['it'])
+  const [targetLanguages, setTargetLanguages] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
     null,
@@ -127,7 +127,6 @@ export const App = () => {
           filterOption={(input, option) =>
             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
           }
-          defaultValue={['it']}
           onChange={handleChange}
           options={languages.map((item) => ({
             value: item.id,
