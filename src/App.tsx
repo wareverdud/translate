@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import translate from 'translate'
-import { languages } from './lib'
-import trashIcon from './assets/trash.svg'
+import { Select } from 'antd'
+import { languageNames, languages } from './lib'
 import './App.css'
 
 export const App = () => {
@@ -69,41 +69,55 @@ export const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, initLanguage, targetLanguages])
 
-  const handleAddLanguage = (newLang: string) => {
-    if (!targetLanguages.includes(newLang)) {
-      setTargetLanguages((prev) => [...prev, newLang])
-    }
-  }
-
-  const handleDeleteLanguage = (lang: string) => {
-    if (targetLanguages.includes(lang)) {
-      setTargetLanguages((prev) => prev.filter((l) => l !== lang))
-    }
-  }
+  const handleChange = (value: string[]) => setTargetLanguages(value)
 
   return (
     <>
       <div className="header">
-        <select onChange={(e) => handleAddLanguage(e.target.value)}>
-          {languages.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+        <Select
+          mode="multiple"
+          allowClear
+          style={{
+            width: '100%',
+            color: '#fff',
+            fontFamily:
+              'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+            fontSize: 'large',
+          }}
+          placeholder="Select target languages"
+          filterOption={(input, option) =>
+            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+          }
+          defaultValue={['it']}
+          onChange={handleChange}
+          options={languages.map((item) => ({
+            value: item.id,
+            label: item.label,
+          }))}
+        />
       </div>
       <div className="source">
         <div className="language-block">
-          <select
-            onChange={(e) => setInitLanguage(e.target.value)}
-            value={initLanguage}
-          >
-            {languages.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.label}
-              </option>
-            ))}
-          </select>
+          <Select
+            style={{
+              color: '#fff',
+              fontFamily:
+                'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+              fontSize: 'large',
+            }}
+            showSearch
+            placeholder="Select a source language"
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={languages.map((item) => ({
+              value: item.id,
+              label: item.label,
+            }))}
+            defaultValue={['en']}
+            onChange={(e) => setInitLanguage(e as unknown as string)}
+          />
+
           <textarea
             placeholder="Enter your text"
             value={value}
@@ -114,25 +128,7 @@ export const App = () => {
       <div className="container">
         {Object.entries(translations).map(([lang, translatedText]) => (
           <div className="language-block" key={lang}>
-            <div className="action">
-              <select
-                value={lang}
-                onChange={(e) => handleAddLanguage(e.target.value)}
-              >
-                {languages.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.label}
-                  </option>
-                ))}
-              </select>
-              <img
-                className="trashIcon"
-                src={trashIcon}
-                alt="Trash Icon"
-                onClick={() => handleDeleteLanguage(lang)}
-              />
-            </div>
-
+            <h3>{languageNames.get(lang)}</h3>
             <div>
               {loading ? (
                 <div className="spinner"></div>

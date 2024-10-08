@@ -19,25 +19,12 @@
   margin-left: 20px;
 }
 
-.action {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .language-block {
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-width: 332px;
   min-height: 243.5px;
-}
-
-.trashIcon {
-  height: 45.5px;
-  background: white;
-  border-radius: 12px;
-  padding: 2px;
 }
 
 textarea {
@@ -54,18 +41,6 @@ textarea {
 
 textarea:focus {
   outline: none;
-}
-
-select {
-  display: block;
-  padding: 12px;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-size: large;
-  font-weight: bold;
-  border: none;
-  border-radius: 16px;
-  background-color: #2a2a2a;
-  appearance: none;
 }
 
 .spinner {
@@ -85,4 +60,8 @@ select {
   100% {
     transform: rotate(360deg);
   }
+}
+
+h3 {
+  margin: 0;
 }
