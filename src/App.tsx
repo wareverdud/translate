@@ -88,6 +88,7 @@ export const App = () => {
                 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
               fontSize: 'large',
             }}
+            dropdownStyle={{ backgroundColor: '#2a2a2a', color: 'white' }}
             showSearch
             placeholder="Select a source language"
             filterOption={(input, option) =>
@@ -121,6 +122,7 @@ export const App = () => {
               'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
             fontSize: 'large',
           }}
+          dropdownStyle={{ backgroundColor: '#2a2a2a', color: 'white' }}
           placeholder="Select target languages"
           filterOption={(input, option) =>
             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
