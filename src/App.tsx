@@ -7,10 +7,10 @@ import './App.css'
 export const App = () => {
   const [value, setValue] = useState('')
   const [initLanguage, setInitLanguage] = useState(
-    localStorage.getItem('initLanguage') || 'en'
+    localStorage.getItem('initLanguage') || 'en',
   )
   const [targetLanguages, setTargetLanguages] = useState<string[]>(
-    JSON.parse(localStorage.getItem('targetLanguages') || '[]')
+    JSON.parse(localStorage.getItem('targetLanguages') || '[]'),
   )
   const [loading, setLoading] = useState(false)
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
@@ -163,4 +163,9 @@ export const App = () => {
                 🔊 Speak
               </button>
             )}
-          </
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
