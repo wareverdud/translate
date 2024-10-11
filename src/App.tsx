@@ -6,8 +6,12 @@ import './App.css'
 
 export const App = () => {
   const [value, setValue] = useState('')
-  const [initLanguage, setInitLanguage] = useState('en')
-  const [targetLanguages, setTargetLanguages] = useState<string[]>([])
+  const [initLanguage, setInitLanguage] = useState(
+    localStorage.getItem('initLanguage') || 'en'
+  )
+  const [targetLanguages, setTargetLanguages] = useState<string[]>(
+    JSON.parse(localStorage.getItem('targetLanguages') || '[]')
+  )
   const [loading, setLoading] = useState(false)
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
     null,
@@ -69,6 +73,14 @@ export const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, initLanguage, targetLanguages])
 
+  useEffect(() => {
+    localStorage.setItem('initLanguage', initLanguage)
+  }, [initLanguage])
+
+  useEffect(() => {
+    localStorage.setItem('targetLanguages', JSON.stringify(targetLanguages))
+  }, [targetLanguages])
+
   const handleChange = (value: string[]) => setTargetLanguages(value)
 
   const handleSpeak = (text: string, lang: string) => {
@@ -98,7 +110,7 @@ export const App = () => {
               value: item.id,
               label: item.label,
             }))}
-            defaultValue={['en']}
+            defaultValue={initLanguage}
             onChange={(e) => setInitLanguage(e as unknown as string)}
           />
           <textarea
@@ -128,6 +140,7 @@ export const App = () => {
             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
           }
           onChange={handleChange}
+          value={targetLanguages}
           options={languages.map((item) => ({
             value: item.id,
             label: item.label,
@@ -150,9 +163,4 @@ export const App = () => {
                 🔊 Speak
               </button>
             )}
-          </div>
-        ))}
-      </div>
-    </>
-  )
-}
+          </
