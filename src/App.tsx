@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import translate from 'translate'
-import { Select } from 'antd'
+import { Select, Button } from 'antd'
 import { languageNames, languages } from './lib'
 import './App.css'
+import { CloseOutlined } from '@ant-design/icons'
 
 export const App = () => {
   const [value, setValue] = useState('')
@@ -113,11 +114,14 @@ export const App = () => {
             defaultValue={initLanguage}
             onChange={(e) => setInitLanguage(e as unknown as string)}
           />
-          <textarea
-            placeholder="Enter your text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <textarea
+              placeholder="Enter your text"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+            <Button onClick={() => setValue('')} icon={<CloseOutlined />} />
+          </div>
           <button onClick={() => handleSpeak(value, initLanguage)}>
             🔊 Speak
           </button>
