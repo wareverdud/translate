@@ -86,6 +86,12 @@ export const App = () => {
 
   const handleSpeak = (text: string, lang: string) => {
     const utterance = new SpeechSynthesisUtterance(text)
+
+    const getVoicebyLang = lang => speechSynthesis
+        .getVoices()
+        .find(voice => voice.startsWith(lang))
+    
+    utterance.voice = getVoicebyLang(lang)
     utterance.lang = lang
     window.speechSynthesis.speak(utterance)
   }
